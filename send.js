@@ -13,12 +13,17 @@ amqp.connect('amqp://localhost', function(err, conn) {
   // Create a channel
   conn.createChannel(function(err, ch) {
 
-    //Create a queue
+    // Define a queue name
     var q = 'hello';
 
-    ch.assertQueue(q, {durable: false});
-    ch.sendToQueue(q, new Buffer('Hello World!'));
-    console.log(" [x] Sent 'Hello World!'");
+    // Create queue if it doesn't already exist
+    ch.assertQueue(q, { durable: false });
+
+    //Send a message to the queue
+    for (var i = 0; i < 1000; i ++) {
+      ch.sendToQueue(q, new Buffer('Hello World!' + ' ' + i));
+      console.log(" [x] Sent 'Hello World!'");
+    }
   });
 
   // Close the connection after a timeout
